@@ -20,7 +20,7 @@ def normalize(data):
         return data / np.max(temp)
 
 def get_volumes(subject):
-    """Here you can write code to load your T1, T2, and FLAIR images, as well as bias corrected T1, T2, and FLAIR images"""
+    """Here you can write code (your own filepath) to load your T1, T2, and FLAIR images, as well as bias corrected T1, T2, and FLAIR images"""
     img = nib.load(filepath)
     images[image_type] = normalize(np.asarray(img.get_fdata()))
     
@@ -44,6 +44,8 @@ def sliding_patches(volumes, BSZ):
     return patchify(volumes_ext, BSZ)
 
 def get_patch_set(subject, BSZ, stride, training=True):
+    """ This function loads a brain volume image and creates an array of patches with a shape suitable for a CNN.
+        It returns the array and the coordinates of the patches."""
     Y_list = []
     coordinates = {}
 
@@ -71,6 +73,7 @@ def get_patch_set(subject, BSZ, stride, training=True):
 
 
     def assemble_patches(prediction, coordinates, volume_shape):
+        """After prediction, this function is used to assemble the patches, given their coordinates"""        
         num_abundances = prediction.shape[-1]
         dim1 = coordinates[0]
         dim2 = coordinates[1]
@@ -93,7 +96,7 @@ def get_patch_set(subject, BSZ, stride, training=True):
         abundances = np.divide(abundances, weights, where=(weights>0))
         return abundances
 
-#This is the regularizer:
+#This is the SegAE regularizer. The constant in the return line is the regularization coefficient.
 def abundance_corr(x):
     x = K.l2_normalize(x, axis=[1,2,3])
     for i in range(x.shape[-1]):
@@ -105,7 +108,7 @@ def abundance_corr(x):
             x_corrsum = K.concatenate([x_corrsum, xi_corrsum])
     return  0.02*K.mean(x_corrsum) #Here you have to find a good value to replace 0.02 to determine suitable amount of "blending" between materials in the segmentation layer
 
-#This is the loss function:
+#This is the SegAE loss function:
 def variation_corr(y_true, y_pred):
     laplace = tf.constant([0., 0., 0., 0., 1., 0., 0., 0., 0.,
                           0., 1., 0., 1., -6., 1., 0., 1., 0.,
@@ -252,7 +255,7 @@ else:
         if not os.path.exists(dest_path):
             os.makedirs(dest_path)
 
-        for i in print_abundances:
+        for i in print_abundances:  # Here each of the the "abundances", i.e. soft segmentations, are saved
             print('Print NIFTI for subject ' + subject)
             new_mask = nib.Nifti1Image(abundances[..., i], img.affine, img.header)
             nib.save(new_mask, 
