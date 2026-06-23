@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+title: "Ventricle_WMH_segmentation"
+message: "If you use this software, please cite our PLOS ONE paper."
+type: software
+
+authors:
+  - family-names: Atlason
+    given-names: Hans Emil
+
+  - family-names: Ellingsen
+    given-names: Lotta María
+
+repository-code: https://github.com/lmellingsen/Ventricle_WMH_segmentation
+
+preferred-citation:
+  type: article
+  title: "A joint ventricle and WMH segmentation from MRI for evaluation of healthy and pathological changes in the aging brain"
+
+  authors:
+    - family-names: Atlason
+      given-names: Hans Emil
+
+    - family-names: Löve
+      given-names: Áskell
+
+    - family-names: Robertsson
+      given-names: Vidar
+
+    - family-names: Blitz
+      given-names: Ari M.
+
+    - family-names: Sigurðsson
+      given-names: Sigurður
+
+    - family-names: Guðnason
+      given-names: Vilmundur G.
+
+    - family-names: Ellingsen
+      given-names: Lotta María
+
+  journal: "PLOS ONE"
+  volume: 17
+  issue: 9
+  year: 2022
+  doi: 10.1371/journal.pone.0274212
+  publisher: "Public Library of Science"
